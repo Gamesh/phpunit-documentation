@@ -56,10 +56,73 @@
   <para>
     By default, all methods of the original class are replaced with a dummy
     implementation that just returns <literal>null</literal> (without calling
-    the original method). Using the <literal>will($this->returnValue())</literal>
+    the original method) but only if method has no return type or return type
+    is nullable. PHPUnit will always try to return value of type which is compatible
+    with return type of SUT mocked method.
+    Using the <literal>will($this->returnValue())</literal>
     method, for instance, you can configure these dummy implementations to
     return a value when called.
   </para>
+
+  <para>
+    <xref linkend="test-doubles.mock-objects.tables.return-types"/>
+    shows return types returned by default for mocked methods.
+  </para>
+
+  <table id="test-doubles.mock-objects.tables.return-types">
+    <title>Return types</title>
+
+    <tgroup cols="2" align="left" colsep="1" rowsep="1">
+      <thead>
+        <row>
+          <entry>SUT method return type</entry>
+          <entry>Mock return value</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry>No return type or <literal>'void'</literal>.</entry>
+          <entry>Returns <literal>null</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>string</literal></entry>
+          <entry>Returns empty string <literal>''</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>float</literal></entry>
+          <entry>Returns <literal>0.0</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>int</literal></entry>
+          <entry>Returns <literal>0</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>bool</literal></entry>
+          <entry>Returns <literal>false</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>array</literal></entry>
+          <entry>Returns <literal>[]</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>object</literal></entry>
+          <entry>Returns new instance of<literal>\stdClass</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>callable</literal> or <literal>closure</literal></entry>
+          <entry>Returns empty <literal>function</literal>.</entry>
+        </row>
+        <row>
+          <entry><literal>traversable</literal> or <literal>generator</literal> or <literal>iterable</literal></entry>
+          <entry>Returns <literal>Generator</literal> instance which yields <literal>null</literal>.</entry>
+        </row>
+        <row>
+          <entry>Non nullable object</entry>
+          <entry>Returns <literal>\PHPUnit\Framework\MockObject\MockObject</literal>instance for that object</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </table>
 
   <note>
     <title>Limitation: final, private, and static methods</title>
